@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 
 require('dotenv').config()
 
-const port = process.env.PORT || 3005
+const port = process.env.PORT || 4000
 
 //Conexión a base de datos
 const mongoose = require('mongoose');
@@ -20,7 +20,8 @@ const user = 'cursonode';
 const password = 'Um6zosxrrT2qfneo';
 const dbname = 'database_pokemon';
 */
-const uri = `mongodb+srv://${process.env.db_user}:${process.env.db_password}@cluster0.xh3rvl2.mongodb.net/${process.env.db_name}?retryWrites=true&w=majority`; //URL de conexión, que completaremos luego
+mongoose.set('strictQuery', true);
+const uri = `mongodb+srv://${process.env.db_user}:${process.env.db_password}@cluster0.y7hvvxb.mongodb.net/${process.env.db_name}?retryWrites=true&w=majority`; //URL de conexión, que completaremos luego
 mongoose.connect(uri,
   { useNewUrlParser: true, useUnifiedTopology: true }
 )
@@ -34,10 +35,6 @@ app.use(express.static(__dirname + '/public'))
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
 
-//Peticiones basicas http
-app.get('/', (req, res) => {
-  res.render("index", {titulo : "mi titulo dinamico"})
-})
 
 app.get('/contacto', (req, res) => {
     res.render("contacto", {tituloContacto : "Estas en contacto jaja"})
@@ -47,10 +44,13 @@ app.get('/contacto', (req, res) => {
 app.use('/', require('./router/rutas'))
 app.use('/pokemon', require('./router/pokemon'))
 
+app.use('/entrenador', require('./router/entrenador'))
+
+app.use('/ruta', require('./router/ruta'))
 
 app.use((req, res) => {
     res.status(404).render("404", {
-        titulo404: "Por aqui no es cruck",
+        titulo404: "Por aqui no es",
         descripcion404: "Te has equivocado de ruta"
     })
 })
